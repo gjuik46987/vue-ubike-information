@@ -59,40 +59,31 @@
   </table>
 
   <!-- 頁籤 -->
-  <nav v-if="pagerEnd > 0">
-    <ul class="pagination">
-      <li @click.prevent="setPage(currentPage - 1)" class="page-item">
-        <a class="page-link" href>Previous</a>
-      </li>
+  <Pagination
+    :listLength="filtedUbikeStops.length"
+    :countOfPage="countOfPage"
+    :currentPage="currentPage"
+    @set-page="setPage"
+  />
 
-      <li
-        v-for="i in pagerEnd"
-        :class="{ active: i + pagerAddAmount === currentPage }"
-        :key="i"
-        @click.prevent="setPage(i + pagerAddAmount)"
-        class="page-item"
-      >
-        <a class="page-link" href>{{ i + pagerAddAmount }}</a>
-      </li>
-
-      <li @click.prevent="setPage(currentPage + 1)" class="page-item">
-        <a class="page-link" href>Next</a>
-      </li>
-    </ul>
-  </nav>
 </template>
 
 <script>
-const PAGINATION_MAX = 10;
 const COUNT_OF_PAGE = 10;
 
+import Pagination from './Pagination.vue';
+
 export default {
+  components: {
+    Pagination
+  },
   data() {
     return {
       currentSort: "sno",
       isSortDesc: false,
       ubikeStops: [],
       searchText: "",
+      countOfPage: 10,
       currentPage: 1
     };
   },
@@ -121,29 +112,6 @@ export default {
 
       return this.sortedUbikeStops.slice(start, end);
     },
-    totalPageCount() {
-      // 計算總頁數
-      return Math.ceil(this.filtedUbikeStops.length / COUNT_OF_PAGE);
-    },
-    pagerEnd() {
-      // 頁碼尾端
-      return this.totalPageCount <= PAGINATION_MAX
-        ? this.totalPageCount
-        : PAGINATION_MAX;
-    },
-    pagerAddAmount() {
-      // 頁碼位移
-      const tmp =
-        this.totalPageCount <= PAGINATION_MAX
-          ? 0
-          : this.currentPage + 4 - this.pagerEnd;
-
-      return tmp <= 0
-        ? 0
-        : this.totalPageCount - (PAGINATION_MAX + tmp) < 0
-        ? this.totalPageCount - PAGINATION_MAX
-        : tmp;
-    }
   },
   watch: {
     sortedUbikeStops() {
