@@ -69,8 +69,6 @@
 </template>
 
 <script>
-const COUNT_OF_PAGE = 10;
-
 import Pagination from './Pagination.vue';
 
 export default {
@@ -104,10 +102,10 @@ export default {
     },
     slicedUbikeStops() {
       // 將排序的結果做分頁切割
-      const start = (this.currentPage - 1) * COUNT_OF_PAGE;
+      const start = (this.currentPage - 1) * this.countOfPage;
       const end =
-        start + COUNT_OF_PAGE <= this.sortedUbikeStops.length
-          ? start + COUNT_OF_PAGE
+        start + this.countOfPage <= this.sortedUbikeStops.length
+          ? start + this.countOfPage
           : this.sortedUbikeStops.length;
 
       return this.sortedUbikeStops.slice(start, end);
